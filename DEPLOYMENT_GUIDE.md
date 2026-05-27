@@ -15,6 +15,7 @@ I have prepared your project for deployment on Vercel. Because this is a monorep
 5. In **Environment Variables**, add:
    - `DATABASE_URL`: Your PostgreSQL connection string.
    - `JWT_SECRET`: A secret string for authentication.
+   - `GEMINI_API_KEY`: Your Google Gemini API Key.
    - `PORT`: 5000 (optional, defaults to 5000 in code).
 6. Click **Deploy**.
 
