@@ -1,6 +1,22 @@
 import { Request, Response } from 'express';
 import prisma from '../utils/prisma';
 import { AuthRequest } from '../middleware/auth';
+import { generateBlogSummary } from '../utils/gemini';
+
+export const generateSummary = async (req: AuthRequest, res: Response) => {
+  const { content } = req.body;
+
+  if (!content) {
+    return res.status(400).json({ message: 'Content is required' });
+  }
+
+  try {
+    const summary = await generateBlogSummary(content);
+    res.json({ summary });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to generate summary' });
+  }
+};
 
 export const getBlogs = async (req: Request, res: Response) => {
   const { category, page = 1, limit = 6, search } = req.query;

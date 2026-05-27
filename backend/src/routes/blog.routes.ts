@@ -6,6 +6,7 @@ import {
   createBlog,
   updateBlog,
   deleteBlog,
+  generateSummary,
 } from '../controllers/blog.controller';
 import { authenticate, isAdmin } from '../middleware/auth';
 
@@ -17,6 +18,7 @@ router.get('/:slug', getBlogBySlug);
 
 // Admin routes
 router.get('/admin/all', authenticate, isAdmin, getAllBlogsAdmin);
+router.post('/generate-summary', authenticate, isAdmin, generateSummary);
 router.post('/', authenticate, isAdmin, createBlog);
 router.put('/:id', authenticate, isAdmin, updateBlog);
 router.delete('/:id', authenticate, isAdmin, deleteBlog);

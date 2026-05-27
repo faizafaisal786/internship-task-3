@@ -18,6 +18,7 @@ const BlogEditor: React.FC = () => {
   const [published, setPublished] = useState(false);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [generatingSummary, setGeneratingSummary] = useState(false);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -51,6 +52,23 @@ const BlogEditor: React.FC = () => {
     fetchCategories();
     fetchBlog();
   }, [id, isEdit]);
+
+  const handleGenerateSummary = async () => {
+    if (!content || content === '<p><br></p>') {
+      alert('Please write some content first');
+      return;
+    }
+
+    setGeneratingSummary(true);
+    try {
+      const res = await api.post('/blogs/generate-summary', { content });
+      setSummary(res.data.summary);
+    } catch (err) {
+      alert('Failed to generate summary');
+    } finally {
+      setGeneratingSummary(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,7 +147,18 @@ const BlogEditor: React.FC = () => {
         <div className="card" style={{ height: 'fit-content' }}>
           <div style={{ padding: '1.5rem' }}>
             <div className="form-group">
-              <label className="form-label">Summary</label>
+              <div className="flex justify-between items-center mb-1">
+                <label className="form-label mb-0">Summary</label>
+                <button 
+                  type="button" 
+                  onClick={handleGenerateSummary} 
+                  className="btn btn-outline" 
+                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
+                  disabled={generatingSummary}
+                >
+                  {generatingSummary ? 'Generating...' : '✨ Generate AI Summary'}
+                </button>
+              </div>
               <textarea
                 className="form-input"
                 rows={4}
